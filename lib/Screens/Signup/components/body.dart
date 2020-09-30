@@ -8,8 +8,35 @@ import 'package:flutter_auth/components/rounded_button.dart';
 import 'package:flutter_auth/components/rounded_input_field.dart';
 import 'package:flutter_auth/components/rounded_password_field.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:http/http.dart' as http;
+
+var _email = "";
+var _password = "";
 
 class Body extends StatelessWidget {
+  @override
+  void email(e) {
+    _email=e;
+    debugPrint(e);
+  }
+
+  @override
+  void password(e) {
+    _password=e;
+    debugPrint(e);
+  }
+
+    @override
+  void register() async{
+    var data={
+      'email': _email,
+      "password": _password
+    };
+    await http.post('http://172.16.0.71:8080/api/users',
+    body: data).then((response) {
+      print(response);
+    });
+  }
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -29,14 +56,14 @@ class Body extends StatelessWidget {
             ),
             RoundedInputField(
               hintText: "Your Email",
-              onChanged: (value) {},
+              onChanged: (value) {email(value);},
             ),
             RoundedPasswordField(
-              onChanged: (value) {},
+              onChanged: (value) {password(value);},
             ),
             RoundedButton(
               text: "SIGNUP",
-              press: () {},
+              press: () {register();},
             ),
             SizedBox(height: size.height * 0.03),
             AlreadyHaveAnAccountCheck(
